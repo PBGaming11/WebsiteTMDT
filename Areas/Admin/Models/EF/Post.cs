@@ -12,6 +12,7 @@ namespace WebsiteTMDT.Areas.Admin.Models.EF
         [Required]
         [StringLength(150)]
         public string Title { get; set; }
+        public string Alias { get; set; }
         public int CategoryId { get; set; }
         public string? Description { get; set; }
         public string? Detail { get; set; }
@@ -19,6 +20,7 @@ namespace WebsiteTMDT.Areas.Admin.Models.EF
         public string? SeoTitle { get; set; }
         public string? SeoDescription { get; set; }
         public string? SeoKeywords { get; set; }
+        public bool IsActive { get; set; }
         public int Position { get; set; }
         public virtual Category Category { get; set; }
     }
