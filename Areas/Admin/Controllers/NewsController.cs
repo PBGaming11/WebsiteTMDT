@@ -33,7 +33,7 @@ namespace WebsiteTMDT.Areas.Admin.Controllers
 
             model.CreateDate = DateTime.Now;
             model.ModifierDate = DateTime.Now;
-            model.CategoryId = 5;
+            model.CategoryId = 1;
             model.Alias = WebsiteTMDT.Areas.Admin.Models.Common.Filter.FilterChar(model.Title);
             _db.News.Add(model);
             _db.SaveChanges();
@@ -68,6 +68,39 @@ namespace WebsiteTMDT.Areas.Admin.Controllers
             {
                 _db.News.Remove(item);
                 _db.SaveChanges();
+                return Json(new { success = true });
+            }
+            return Json(new { success = false });
+        }
+        //chỉnh hiện thị trong tin tức
+        [HttpPost]
+        public IActionResult IsActive(int id)
+        {
+            var item = _db.News.Find(id);
+            if (item != null)
+            {
+                item.IsActive = !item.IsActive;
+                _db.Entry(item).State = Microsoft.EntityFrameworkCore.EntityState.Modified;
+                _db.SaveChanges();
+                return Json(new { success = true, isActive = item.IsActive });
+            }
+            return Json(new { success = false });
+        }
+        [HttpPost]
+        public ActionResult DeleteAll(string id)
+        {
+            if(!string.IsNullOrEmpty(id))
+            {
+                var items = id.Split(",");
+                if(items!= null && items.Any())
+                {
+                    foreach(var item in items)
+                    {
+                        var obj = _db.News.Find(Convert.ToInt32(item));
+                        _db.News.Remove(obj);
+                        _db.SaveChanges();
+                    }
+                }
                 return Json(new { success = true });
             }
             return Json(new { success = false });
