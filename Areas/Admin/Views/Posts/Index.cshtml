@@ -1,12 +1,8 @@
 ﻿@{
-    ViewData["Title"] = "Danh sách tin tức";
+    ViewData["Title"] = "Danh sách bài đăng";
     Layout = "~/Areas/Admin/Views/Shared/_LayoutAdmin.cshtml";
 }
-@model X.PagedList.IPagedList<WebsiteTMDT.Areas.Admin.Models.EF.New>
-@using X.PagedList;
-@using X.Web.PagedList
-
-
+@model IEnumerable<WebsiteTMDT.Areas.Admin.Models.EF.Post>
 @section naviheader {
     <!-- Left navbar links -->
     <ul class="navbar-nav">
@@ -26,7 +22,7 @@
     <div class="container-fluid">
         <div class="row mb-2">
             <div class="col-sm-6">
-                <h1>Quản lý tin tức</h1>
+                <h1>Quản lý bài đăng</h1>
             </div>
             <div class="col-sm-6">
                 <ol class="breadcrumb float-sm-right">
@@ -44,10 +40,10 @@
     <!-- Default box -->
     <div class="card">
         <div class="card-header">
-            <h3 class="card-title">Thêm mới danh sách @ViewBag.Title</h3>
+            <h3 class="card-title">@ViewBag.Title</h3>
 
             <div class="card-tools">
-                <a href="~/Admin/News/Add" class="btn btn-primary">Thêm mới</a>
+                <a href="~/Admin/Posts/Add" class="btn btn-primary">Thêm mới</a>
                 <a href="#" class="btn btn-danger" id="btnDeleteAll">Xóa</a>
             </div>
         </div>
@@ -68,7 +64,7 @@
                 <tbody>
                     @if (Model != null && Model.Any())
                     {
-                        
+
                         var i = 1;
                         foreach (var item in Model)
                         {
@@ -76,12 +72,10 @@
                             <tr id="trow_@item.Id">
                                 <td><input type="checkbox" class="cbkItem" value="@item.Id" /></td>
                                 <td>@i</td>
-                                <td>
-                                    @if (item.Image != null)
+                                <td>@if(item.Image != null)
                                     {
                                         <img width="50" src="data:image/png;base64,@item.Image" />
-                                    }
-                                    else
+                                    }else
                                     {
                                         <a>No Image</a>
                                     }
@@ -92,7 +86,7 @@
                                     <a href="#" data-id="@item.Id" class="btnActive">@Html.Raw(strCheck)</a>
                                 </td>
                                 <td>
-                                    <a href="/Admin/News/Edit/@item.Id" class="btn btn-sm btn-primary">Sửa</a>
+                                    <a href="/Admin/Posts/Edit/@item.Id" class="btn btn-sm btn-primary">Sửa</a>
                                     <a href="#" data-id="@item.Id" class="btn btn-sm btn-danger btnDelete">Xóa</a>
                                 </td>
 
@@ -108,13 +102,10 @@
                             <th colspan="4">Không có bản ghi nào!!!</th>
                         </tr>
                     }
+
+
                 </tbody>
             </table>
-     
-            @Html.PagedListPager(Model, page => Url.Action("Index", new { page }))
-            
-
-        </div>
         </div>
         <!-- /.card-body -->
         <div class="card-footer">
@@ -137,7 +128,7 @@
                     var _id = $(this).val();
                     if (i === 0) {
                         id += _id;
-                    } else { 
+                    } else {
                         id += "," + _id;
                     }
                     i++;
@@ -149,7 +140,7 @@
                 var conf = confirm('Bạn có muốn xóa hay không?')
                 if (conf == true) {
                     $.ajax({
-                        url: '/Admin/News/DeleteAll',
+                        url: '/Admin/Posts/DeleteAll',
                         type: 'POST',
                         data: { id: id },
                         success: function (rs) {
@@ -182,7 +173,7 @@
                 var conf = confirm('Bạn có muốn xóa không ?');
                 if (conf == true) {
                     $.ajax({
-                        url: '/Admin/News/Delete',
+                        url: '/Admin/Posts/Delete',
                         type: 'POST',
                         data: { id: id },
                         success: function (rs) {
@@ -200,7 +191,7 @@
                 var btn = $(this);
                 var id = btn.data("id");
                 $.ajax({
-                    url: '/Admin/News/IsActive',
+                    url: '/Admin/Posts/IsActive',
                     type: 'POST',
                     data: { id: id },
                     success: function (rs) {
