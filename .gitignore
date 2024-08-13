@@ -371,3 +371,7 @@ FodyWeavers.xsd
 /Data/Migrations/20240809082613_updatActiv.Designer.cs
 /Data/Migrations/20240808030348_CreatedDataabase.cs
 /Data/Migrations/20240808030348_CreatedDataabase.Designer.cs
+/Data/Migrations/20240812071456_UpdateModel.cs
+/Data/Migrations/20240812071456_UpdateModel.Designer.cs
+/wwwroot/css
+/Data/Migrations/ApplicationDbContextModelSnapshot.cs
