@@ -15,16 +15,27 @@ namespace WebsiteTMDT.Areas.Admin.Controllers
             _db = db;
         }
 
-        public IActionResult Index(int? page)
+        public IActionResult Index(string searchText, int? page)
         {
             var pageSize = 10;
-            if (page == null)
+            var pageIndex = page ?? 1;
+
+            // Start with the base query
+            IEnumerable<New> items = _db.News.OrderByDescending(x => x.Id);
+
+            // Apply search filter
+            if (!string.IsNullOrEmpty(searchText))
             {
-                page = 1;
+                items = items.Where(x => x.Alias.Contains(searchText) || x.Title.Contains(searchText));
             }
-            var pageIndex = page.HasValue ? Convert.ToInt32(page) : 1;
-            var item = _db.News.OrderByDescending(x => x.Id).ToPagedList(pageIndex, pageSize);
-            return View(item);
+
+            // Apply pagination after filtering
+            var pagedItems = items.ToPagedList(pageIndex, pageSize);
+
+            ViewBag.PageSize = pageSize;
+            ViewBag.Page = pageIndex;
+
+            return View(pagedItems);
         }
         public ActionResult Add()
         {

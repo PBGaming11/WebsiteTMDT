@@ -2,7 +2,9 @@
     ViewData["Title"] = "Danh sách bài đăng";
     Layout = "~/Areas/Admin/Views/Shared/_LayoutAdmin.cshtml";
 }
-@model IEnumerable<WebsiteTMDT.Areas.Admin.Models.EF.Post>
+@model X.PagedList.IPagedList<WebsiteTMDT.Areas.Admin.Models.EF.Post>
+@using X.PagedList;
+@using X.Web.PagedList
 @section naviheader {
     <!-- Left navbar links -->
     <ul class="navbar-nav">
@@ -13,7 +15,7 @@
             <a href="/Admin" class="nav-link">Home</a>
         </li>
         <li class="nav-item d-none d-sm-inline-block">
-            <a href="../Admin/Category" class="nav-link">@ViewBag.Title</a>
+            <a href="../Admin/Posts" class="nav-link">@ViewBag.Title</a>
         </li>
     </ul>
 }
@@ -48,6 +50,19 @@
             </div>
         </div>
         <div class="card-body">
+            <div class="row">
+                <div class="col-6">
+                    @using (Html.BeginForm("Index", "Posts", FormMethod.Get))
+                    {
+                        <div class="input-group input-group-sm">
+                            @Html.TextBox("searchText", null, new { @class = "form-control" })
+                            <span class="input-group-append">
+                                <button type="submit" class="btn btn-info btn-flat">Tìm kiếm</button>
+                            </span>
+                        </div>
+                    }
+                </div>
+            </div>
             <table class="table table-hover">
                 <thead>
                     <tr>
@@ -57,15 +72,13 @@
                         <th>Tiêu đề tin tức</th>
                         <th>Ngày tạo</th>
                         <th>Hiển thị</th>
-                        <th>Thứ tự</th>
-                        <th></th>
+                        <th style="width:15opx;"></th>
                     </tr>
                 </thead>
                 <tbody>
                     @if (Model != null && Model.Any())
                     {
-
-                        var i = 1;
+                        var i = ((ViewBag.Page - 1) * ViewBag.PageSize) + 1;
                         foreach (var item in Model)
                         {
                             var strCheck = item.IsActive ? "<i class='fa fa-check text-success'></i>" : "<i class='fas fa-times text-danger'></i>";
@@ -106,6 +119,11 @@
 
                 </tbody>
             </table>
+            <div class="row">
+                <div class="col-12 text-right">
+                    @Html.PagedListPager(Model, page => Url.Action("Index", new { page }))
+                </div>
+            </div>
         </div>
         <!-- /.card-body -->
         <div class="card-footer">
